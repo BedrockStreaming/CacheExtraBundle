@@ -87,7 +87,7 @@ class VarnishPurgeListener implements EventSubscriberInterface
             // Rebuild url without querystring
             $url = $turl['path'];
             if (!empty($turl['query'])) {
-                $tquery = array();
+                $tquery = [];
                 $param  = $this->cacheResetter->getParamName();
 
                 // Remove cache parameters
@@ -117,10 +117,10 @@ class VarnishPurgeListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'kernel.request' => array(
-                array('onKernelRequest', 0),
-            ),
-        );
+        return [
+            'kernel.request' => [
+                ['onKernelRequest', 0],
+            ],
+        ];
     }
 }

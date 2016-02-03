@@ -9,16 +9,16 @@ use M6Web\Bundle\CacheExtraBundle\Listener;
  */
 class VarnishPurgeListener extends atoum\test
 {
-    public $logs      = array();
-    public $purgeUrls = array();
+    public $logs      = [];
+    public $purgeUrls = [];
 
     /**
      * @dataProvider onKernelRequestDataProvider
      */
     public function testOnKernelRequest($url, $param, $allowed, $expResult, $purgedUrls, $lastLogs)
     {
-        $this->logs = array();
-        $this->purgeUrls = array();
+        $this->logs = [];
+        $this->purgeUrls = [];
 
         $request              = $this->getRequestMock($url);
         $varnishPurgeListener = $this->getInstance($param, $allowed, $request);
@@ -37,42 +37,45 @@ class VarnishPurgeListener extends atoum\test
         ;
     }
 
+    /**
+     * @return array
+     */
     public function onKernelRequestDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 '/test/url.php',
                 'delete',
                 false,
                 true,
-                array(),
-                array()
-            ),
-            array(
+                [],
+                []
+            ],
+            [
                 '/test/url.php?delete=1',
                 'delete',
                 true,
                 true,
-                array(
+                [
                     '/test/url.php',
-                ),
-                array(
+                ],
+                [
                     'VARNISH PURGE : /test/url.php'
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 '/test/url.php?delete=1&blabla',
                 'delete',
                 true,
                 true,
-                array(
+                [
                     '/test/url.php?blabla',
-                ),
-                array(
+                ],
+                [
                     'VARNISH PURGE : /test/url.php?blabla'
-                )
-            ),
-        );
+                ]
+            ],
+        ];
     }
 
     protected function getInstance($paramName, $allowed, $request)
