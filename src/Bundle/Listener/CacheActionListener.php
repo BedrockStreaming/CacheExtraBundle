@@ -61,6 +61,29 @@ class CacheActionListener implements EventSubscriberInterface
     }
 
     /**
+     * Return list of cached blocks with status
+     *
+     * @return array list of cached controller with status
+     */
+    public function getCachedBlocks()
+    {
+        return $this->cachedBlocks;
+    }
+
+    /**
+     * Return static list of subscribed events
+     *
+     * @return array List of events we want to subscribe to
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::RESPONSE => 'onKernelResponse',
+            KernelEvents::REQUEST  => 'onKernelRequest',
+        ];
+    }
+
+    /**
      * Method called on kernel.request event. Handle only "subrequest"
      * @param KernelEvent $event The received event
      *
@@ -81,7 +104,7 @@ class CacheActionListener implements EventSubscriberInterface
             $fromCache  = false;
 
             $responseContent = $this->cacheService->getConcurrent($cacheKey);
-            if ($responseContent || ($responseContent === '' &&  !$request->attributes->get('ignore_errors')) ) {
+            if ($responseContent || ($responseContent === '' &&  !$request->attributes->get('ignore_errors'))) {
 
                 $response = new Response($responseContent);
                 $response->headers->set('server_cached', 1);
@@ -136,7 +159,7 @@ class CacheActionListener implements EventSubscriberInterface
     private function getRequestCacheKey(Request $request)
     {
         $p          = $request->attributes->all();
-        $parameters = array();
+        $parameters = [];
         foreach ($p as $k => $v) {
 
             // On ne prend pas ces clefs
@@ -220,28 +243,5 @@ class CacheActionListener implements EventSubscriberInterface
         $html .= '</div>';
 
         $response->setContent($html);
-    }
-
-    /**
-     * Return static list of subscribed events
-     *
-     * @return array List of events we want to subscribe to
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::RESPONSE => 'onKernelResponse',
-            KernelEvents::REQUEST  => 'onKernelRequest'
-        );
-    }
-
-    /**
-     * Return list of cached blocks with status
-     *
-     * @return array list of cached controller with status
-     */
-    public function getCachedBlocks()
-    {
-        return $this->cachedBlocks;
     }
 }

@@ -28,6 +28,20 @@ class VarnishPurgeListener implements EventSubscriberInterface
     }
 
     /**
+     * Return static list of subscribed events
+     *
+     * @return array List of events we want to subscribe to
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'kernel.request' => [
+                ['onKernelRequest', 0],
+            ],
+        ];
+    }
+
+    /**
      * Purge varnish servers when a kernel.request event is dispatched
      *
      * @return boolean
@@ -108,19 +122,5 @@ class VarnishPurgeListener implements EventSubscriberInterface
         }
 
         return $url;
-    }
-
-    /**
-     * Return static list of subscribed events
-     *
-     * @return array List of events we want to subscribe to
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            'kernel.request' => [
-                ['onKernelRequest', 0],
-            ],
-        ];
     }
 }

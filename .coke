@@ -1,4 +1,4 @@
-standard=Cytron
+standard=vendor/m6web/symfony2-coding-standard/M6Web_Symfony2
 
 src/
 !Tests/

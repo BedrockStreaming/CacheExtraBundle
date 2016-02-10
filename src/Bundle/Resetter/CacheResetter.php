@@ -23,7 +23,7 @@ class CacheResetter implements CacheResetterInterface
 
     /**
      * Construct the cache resetter
-     * 
+     *
      * @param EventDispatcherInterface $eventDispatcher  The Event Dispatcher to dispatch the cache.reset event
      * @param string                   $paramName        Name of the parameter to check to purge
      * @param Provider                 $firewallProvider Firewall provider (Factory)
@@ -69,7 +69,7 @@ class CacheResetter implements CacheResetterInterface
 
     /**
      * Set the request object
-     * 
+     *
      * @param Request $request The Request object
      *
      * @return $this

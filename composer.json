@@ -9,7 +9,9 @@
     "require-dev": {
         "symfony/symfony": "~2.3|~3.0",
         "m6web/firewall-bundle": "~1.0",
-        "atoum/atoum": "~2.0"
+        "atoum/atoum": "~2.0",
+        "m6web/coke": "~2.1",
+        "m6web/symfony2-coding-standard": "~3.1"
     },
     "autoload": {
         "psr-4": {

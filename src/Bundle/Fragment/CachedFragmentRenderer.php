@@ -12,6 +12,14 @@ class CachedFragmentRenderer extends InlineFragmentRenderer
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return 'cached';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function render($uri, Request $request, array $options = array())
     {
         $options['ignore_errors'] = false;
@@ -29,13 +37,5 @@ class CachedFragmentRenderer extends InlineFragmentRenderer
         $subRequest->attributes->set('server_cache', true);
 
         return $subRequest;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'cached';
     }
 }

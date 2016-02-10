@@ -51,7 +51,7 @@ class CacheActionDataCollector extends DataCollector
                 'blocks' => $blocks,
                 'total'  => $total,
                 'hits'   => $nbHits,
-                'miss'   => $nbMiss
+                'miss'   => $nbMiss,
             ];
         }
     }

@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class M6WebCacheExtraBundle extends Bundle
 {
+    /**
+     * @return DependencyInjection\M6WebCacheExtraExtension
+     */
     public function getContainerExtension()
     {
         return new DependencyInjection\M6WebCacheExtraExtension();
