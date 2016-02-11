@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use M6Web\Bundle\FirewallBundle\Firewall\Provider;
 use M6Web\Component\CacheExtra\Resetter\CacheResetterInterface;
-use M6Web\Component\CacheExtra\CacheException;
 
 /**
  * The Cache resetter say if the cache must be purge or not on a given CacheInterface
@@ -15,7 +14,7 @@ use M6Web\Component\CacheExtra\CacheException;
 class CacheResetter implements CacheResetterInterface
 {
     protected $eventDispatcher;
-    protected $allowedIps = array();
+    protected $allowedIps = [];
     protected $paramName;
     protected $request;
     protected $shouldReset;
@@ -24,7 +23,7 @@ class CacheResetter implements CacheResetterInterface
 
     /**
      * Construct the cache resetter
-     * 
+     *
      * @param EventDispatcherInterface $eventDispatcher  The Event Dispatcher to dispatch the cache.reset event
      * @param string                   $paramName        Name of the parameter to check to purge
      * @param Provider                 $firewallProvider Firewall provider (Factory)
@@ -70,7 +69,7 @@ class CacheResetter implements CacheResetterInterface
 
     /**
      * Set the request object
-     * 
+     *
      * @param Request $request The Request object
      *
      * @return $this
@@ -112,6 +111,7 @@ class CacheResetter implements CacheResetterInterface
         if (!$this->getRequest()) {
             return false;
         }
+
         if ($this->shouldReset !== null) {
             return $this->shouldReset;
         }
@@ -119,11 +119,7 @@ class CacheResetter implements CacheResetterInterface
         $whiteListed   = $this->isWhiteListed();
         $hasClearParam = $this->hasClearingParam($this->getRequest());
 
-        $this->shouldReset =  $hasClearParam && $whiteListed;
-
-        if (!$whiteListed && $hasClearParam) {
-            throw new CacheException('your IP : '.$this->request->getClientIp().' is not allowed');
-        }
+        $this->shouldReset = $hasClearParam && $whiteListed;
 
         return $this->shouldReset;
     }

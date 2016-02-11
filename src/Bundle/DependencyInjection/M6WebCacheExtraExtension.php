@@ -18,6 +18,14 @@ class M6WebCacheExtraExtension extends Extension
     protected $twigExtension = array('renderCache');
 
     /**
+     * @return string
+     */
+    public function getAlias()
+    {
+        return 'm6_cache_extra';
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container)
@@ -45,6 +53,7 @@ class M6WebCacheExtraExtension extends Extension
         }
     }
 
+
     /**
      * Load the cache action configuration
      *
@@ -58,7 +67,7 @@ class M6WebCacheExtraExtension extends Extension
         if (!$container->hasParameter('m6.listener.cache_action.excludekeys')) {
             $container->setParameter(
                 'm6.listener.cache_action.excludekeys',
-                array('_template', '_cache', '_method')
+                ['_template', '_cache', '_method']
             );
         }
 
@@ -69,14 +78,5 @@ class M6WebCacheExtraExtension extends Extension
         $definition->addMethodCall('setCacheKeyExclude', array($container->getParameter('m6.listener.cache_action.excludekeys')));
         $definition->addTag('kernel.event_subscriber');
         $container->setDefinition('m6.action_cache.listener', $definition);
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getAlias()
-    {
-        return 'm6_cache_extra';
     }
 }

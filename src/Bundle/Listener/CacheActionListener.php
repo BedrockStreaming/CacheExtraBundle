@@ -30,24 +30,22 @@ class CacheActionListener implements EventSubscriberInterface
 
     /**
      * Constructor.
+     *
      * @param boolean $debug active or not debug mode
      * @param string  $env   kernel env
-     *
-     * @return void
      */
     public function __construct($debug, $env)
     {
-        $this->cachedBlocks = array();
+        $this->cachedBlocks = [];
         $this->debug        = $debug;
         $this->env          = $env;
-        $this->excludeKey   = array();
+        $this->excludeKey   = [];
     }
 
     /**
      * Set the cache service
-     * @param CacheInterface $cacheService The cache service to use to store response
      *
-     * @return void
+     * @param CacheInterface $cacheService The cache service to use to store response
      */
     public function setCacheService(CacheInterface $cacheService)
     {
@@ -60,6 +58,29 @@ class CacheActionListener implements EventSubscriberInterface
     public function setCacheKeyExclude(array $exclude)
     {
         $this->excludeKey = $exclude;
+    }
+
+    /**
+     * Return list of cached blocks with status
+     *
+     * @return array list of cached controller with status
+     */
+    public function getCachedBlocks()
+    {
+        return $this->cachedBlocks;
+    }
+
+    /**
+     * Return static list of subscribed events
+     *
+     * @return array List of events we want to subscribe to
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::RESPONSE => 'onKernelResponse',
+            KernelEvents::REQUEST  => 'onKernelRequest',
+        ];
     }
 
     /**
@@ -82,8 +103,8 @@ class CacheActionListener implements EventSubscriberInterface
             $controller = $request->attributes->get('controllerName');
             $fromCache  = false;
 
-            $responseContent = $this->cacheService->get($cacheKey);
-            if ($responseContent || ($responseContent === '' &&  !$request->attributes->get('ignore_errors')) ) {
+            $responseContent = $this->cacheService->getConcurrent($cacheKey);
+            if ($responseContent || ($responseContent === '' &&  !$request->attributes->get('ignore_errors'))) {
 
                 $response = new Response($responseContent);
                 $response->headers->set('server_cached', 1);
@@ -119,7 +140,7 @@ class CacheActionListener implements EventSubscriberInterface
 
             $cacheKey = $request->attributes->get('cache_key');
             $ttl      = $response->headers->getCacheControlDirective('max-age');
-            $this->cacheService->set($cacheKey, $response->getContent(), $ttl);
+            $this->cacheService->setConcurrent($cacheKey, $response->getContent(), $ttl);
             if ($this->debug) {
                 $this->decorateResponse($request, $response, $request->attributes->get('_controller'), false, $ttl);
             }
@@ -133,12 +154,12 @@ class CacheActionListener implements EventSubscriberInterface
      *
      * @return string The cache key to use
      *
-     * @throws \M6Web\Component\CacheExtra\CacheException
+     * @throws \Exception
      */
     private function getRequestCacheKey(Request $request)
     {
         $p          = $request->attributes->all();
-        $parameters = array();
+        $parameters = [];
         foreach ($p as $k => $v) {
 
             // On ne prend pas ces clefs
@@ -171,7 +192,6 @@ class CacheActionListener implements EventSubscriberInterface
     private function validateRequestParameter($value)
     {
         if (null == $value) {
-
             return true;
         }
 
@@ -179,13 +199,10 @@ class CacheActionListener implements EventSubscriberInterface
 
             foreach ($value as $v) {
                 if (!$this->validateRequestParameter($v)) {
-
                     return false;
                 }
             }
-
         } elseif (!is_scalar($value)) {
-
             return false;
         }
 
@@ -226,28 +243,5 @@ class CacheActionListener implements EventSubscriberInterface
         $html .= '</div>';
 
         $response->setContent($html);
-    }
-
-    /**
-     * Return static list of subscribed events
-     *
-     * @return array List of events we want to subscribe to
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::RESPONSE => 'onKernelResponse',
-            KernelEvents::REQUEST  => 'onKernelRequest'
-        );
-    }
-
-    /**
-     * Return list of cached blocks with status
-     *
-     * @return array list of cached controller with status
-     */
-    public function getCachedBlocks()
-    {
-        return $this->cachedBlocks;
     }
 }

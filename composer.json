@@ -2,13 +2,24 @@
     "name": "m6web/cache-extra-bundle",
     "description": "SF2 Cache extra features",
     "type": "symfony-bundle",
-    "autoload": {
-        "psr-0": { "": "src/" }
-    },
-    "minimum-stability" : "dev",
     "prefer-stable": true,
+    "require": {
+        "php": ">5.4"
+    },
     "require-dev": {
-        "m6web/firewall-bundle": "~0.3",
-        "atoum/atoum-bundle": "~1.0"
+        "symfony/symfony": "~2.3|~3.0",
+        "m6web/firewall-bundle": "~1.0",
+        "atoum/atoum": "~2.0",
+        "m6web/coke": "~2.1",
+        "m6web/symfony2-coding-standard": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "M6Web\\Bundle\\CacheExtraBundle\\": "src/Bundle",
+            "M6Web\\Component\\CacheExtra\\": "src/Component"
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
     }
 }
